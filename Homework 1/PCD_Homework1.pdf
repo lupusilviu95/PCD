@@ -1,0 +1,11 @@
+--2018-02-27 22:45:09--  https://profs.info.uaic.ro/~adria/teach/courses/pcd/homework/PCD_Homework1.pdf
+Resolving profs.info.uaic.ro (profs.info.uaic.ro)... 85.122.23.20
+Connecting to profs.info.uaic.ro (profs.info.uaic.ro)|85.122.23.20|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 45424 (44K) [application/pdf]
+Saving to: ‘PCD_Homework1.pdf.1’
+
+     0K .......... .......... .......... .......... ....      100% 1,32M=0,03s
+
+2018-02-27 22:45:09 (1,32 MB/s) - ‘PCD_Homework1.pdf.1’ saved [45424/45424]
+
