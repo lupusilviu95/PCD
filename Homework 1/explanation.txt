@@ -1,0 +1,47 @@
+Pentru a genera un fisier suficient de mare putem folosi comanda dd:
+
+	* dd if=/dev/zero of=file.out bs=1MB count=500
+
+Comanda de mai sus va genera un fisier de 500 de MB (500 de blocuri a cate un 1MB)
+
+
+Pentru a rula programele, este nevoie de python3.5 si de pachetul click, folosit pentru a crea interfata la linia de comanda.
+Acesta se poate instala folosind urmatoarea comanda:
+	
+	* pip install click
+
+Exista trei optiuni comune intre client si server:
+
+	* --protocol - poate fi fie TCP, fie UDP. Daca nu este specificat, valoare implicita este TCP
+	* --streaming/--stop-wait - specifica modul de transmitere al fisierului. Daca nu este specificat, valoare implicita este streaming
+	* --message-size - numarul de octeti trimisi in retea. Integer intre 1 si 65535. Daca nu este specificat, valoarea implicita este 2048
+
+Exista o a patra optiune, disponibila doar clientului:
+	
+	* --file - calea catre fisierul care urmeaza a fi trimis in retea. Aceasta optiune este obligatorie.
+
+
+Statistici:
+	
+	* TCP streaming
+		* It took 3.8132572174072266 seconds
+		* Sent 15259 chunks
+		* Sent 500000000 bytes
+		* Received 15266 chunks
+		* Received 500000000 bytes
+
+	* TCP stop/wait
+		* It took 9.7534470558166504 seconds
+ 		* Sent 15385 chunks
+		* Sent 500000000 bytes
+		* Received 15387 chunks
+		* Received 500000000 bytes
+
+
+	* UDP streaming
+		* It took 2.8127806186676025 seconds
+		* Sent 15259 chunks
+		* Sent 500000000 bytes
+		* Received 11007 chunks
+		* Received 360637696 bytes
+

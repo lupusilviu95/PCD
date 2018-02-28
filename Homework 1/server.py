@@ -138,7 +138,7 @@ class TCPServer(object):
 @click.command()
 @click.option("--protocol", "-p", type=click.Choice(["TCP", "UDP"]), default="TCP")
 @click.option("--streaming/--stop-wait", default=True)
-@click.option("--message-size", "-s", type=click.IntRange(1, 65535), default=65535)
+@click.option("--message-size", "-s", type=click.IntRange(1, 65535), default=2048)
 def cli(protocol, streaming, message_size):
     if protocol == "UDP":
         print("Server starting in UDP mode")

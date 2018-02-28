@@ -154,7 +154,7 @@ class TCPClient(object):
 @click.command()
 @click.option("--protocol", "-p", type=click.Choice(["TCP", "UDP"]), default="TCP")
 @click.option("--streaming/--stop-wait", default=True)
-@click.option("--message-size", "-s", type=click.IntRange(1, 65535), default=65535)
+@click.option("--message-size", "-s", type=click.IntRange(1, 65535), default=2048)
 @click.option("--file", "-f", type=click.File("rb"), required=True)
 def cli(protocol, streaming, message_size, file):
     # tcp(protocol, message_size)
