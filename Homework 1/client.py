@@ -3,6 +3,7 @@
 import click
 import socket
 import threading
+import time
 
 IP = "127.0.0.1"
 PROTOCOL_TO_PORT = {
@@ -25,17 +26,23 @@ class UDPClient(object):
 
     def _sw_send_file(self):
         self.file.seek(0)
+        start = time.time()
+        bytes_written = 0
         count = 0
         while True:
             data = self.file.read(self.size)
             if not data:
                 print("Finished transmitting file")
+
+                self.socket.sendto(data, (self.host, self.port))
+
                 self.socket.close()
                 print("Closing connection to client")
                 break
             count += 1
-            print("Sent packet {}".format(count))
+            print("Sent  {}".format(len(data)))
             self.socket.sendto(data, (self.host, self.port))
+            bytes_written += len(data)
             print("Waiting for confirmation on packet {}".format(count))
             ack = -1
             while ack != count:
@@ -43,30 +50,39 @@ class UDPClient(object):
                     data, _ = self.communication_socket.recvfrom(self.size)
                     ack = int.from_bytes(data, byteorder='big')
                 except socket.timeout:
-                    print("**************Socket timed out, sending data again")
+                    print("* Socket timed out, sending data again")
                     self.socket.sendto(data, (self.host, self.port))
 
             print("Confirmation data received: {}".format(int.from_bytes(data, byteorder='big')))
+        stop = time.time()
+        print("It took {} seconds".format(stop-start))
+        print("Sent {} chunks".format(count))
+        print("Sent {} bytes".format(bytes_written))
 
     def _send_file(self):
         self.file.seek(0)
         count = 0
+        start = time.time()
+        bytes_written = 0
         while True:
             data = self.file.read(self.size)
+
+            print("Sent  {} bytes".format(len(data)))
+
             if not data:
                 print("Finished transmitting file")
+                self.socket.sendto(data, (self.host, self.port))
                 self.socket.close()
                 print("Closing connection to client")
                 break
             count += 1
-            print("Sent packet {}".format(count))
             self.socket.sendto(data, (self.host, self.port))
+            bytes_written += len(data)
+        stop = time.time()
+        print("It took {} seconds".format(stop-start))
+        print("Sent {} chunks".format(count))
+        print("Sent {} bytes".format(bytes_written))
 
-
-
-
-
-        print("Sent {} messages".format(count))
 
 
 class TCPClient(object):
@@ -81,6 +97,8 @@ class TCPClient(object):
     def _send_file(self):
         self.socket.connect((self.host, self.port))
         self.file.seek(0)
+        start = time.time()
+        bytes_written = 0
         count = 0
         while True:
             data = self.file.read(self.size)
@@ -90,11 +108,21 @@ class TCPClient(object):
                 print("Closing connection to client")
                 break
             self.socket.send(data)
+            bytes_written += len(data)
+            count += 1
+            print("Sent  {} bytes".format(len(data)))
+        stop = time.time()
+        print("It took {} seconds".format(stop-start))
+        print("Sent {} chunks".format(count))
+        print("Sent {} bytes".format(bytes_written))
+
 
     def _sw_send_file(self):
         self.socket.connect((self.host, self.port))
         self.file.seek(0)
         count = 0
+        start = time.time()
+        bytes_written = 0
         while True:
             data = self.file.read(self.size)
             if not data:
@@ -104,7 +132,8 @@ class TCPClient(object):
                 break
             count += 1
             self.socket.send(data)
-            print("Sent packet {}".format(count))
+            bytes_written += len(data)
+            print("Sent  {} bytes".format(len(data)))
             print("Waiting for confirmation on packet {}".format(count))
             ack = -1
             while ack != count:
@@ -116,6 +145,10 @@ class TCPClient(object):
                     self.socket.send(data)
 
             print("Confirmation data received: {}".format(int.from_bytes(data, byteorder='big')))
+        stop = time.time()
+        print("It took {} seconds".format(stop-start))
+        print("Sent {} chunks".format(count))
+        print("Sent {} bytes".format(bytes_written))
 
 
 @click.command()

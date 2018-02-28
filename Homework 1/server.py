@@ -24,13 +24,15 @@ class UDPServer(object):
 
     def _sw_recv_file(self):
         count = 0
+        bytes_read = 0
         with open("udp.pdf", "wb") as out:
             try:
                 _data = None
                 while True:
                     data, address = self.sock.recvfrom(self.size)
+                    bytes_read += len(data)
                     if data != _data:
-                        print("Received chunk no {}".format(count))
+                        print("Received {} bytes".format(len(data)))
                         _data = data
                         count += 1
                     ip, port = address
@@ -39,24 +41,33 @@ class UDPServer(object):
                     out.write(data)
                     if not data:
                         print("Done!")
+                        break
             except:
                 print("Something went wrong")
                 print("Received {} messages".format(count))
+        print("Received {} chunks".format(count))
+        print("Received {} bytes".format(bytes_read))
 
     def _recv_file(self):
         count = 0
+        bytes_read = 0
+
         with open("udp.pdf", "wb") as out:
             try:
                 while True:
                     data, address = self.sock.recvfrom(self.size)
+                    bytes_read += len(data)
                     count += 1
-                    print("Received chunk no {}".format(count))
+                    print("Received {} bytes".format(len(data)))
                     out.write(data)
                     if not data:
                         print("Done!")
+                        break
             except:
                 print("Something went wrong")
                 print("Received {} messages".format(count))
+        print("Received {} chunks".format(count))
+        print("Received {} bytes".format(bytes_read))
 
 
 
@@ -79,26 +90,36 @@ class TCPServer(object):
             threading.Thread(target=self.recv_file, args=(client, address)).start()
 
     def _recv_file(self, client, address):
+        count = 0
+        bytes_read = 0
         with open("tcp.pdf", "wb") as out:
             try:
                 while True:
                     data = client.recv(self.size)
+                    count += 1
+                    bytes_read += len(data)
+                    print("Received {} bytes".format(len(data)))
                     out.write(data)
                     if not data:
                         print("Done!")
                         break
             except:
                 print("SMTH happened")
+        print("Received {} chunks".format(count))
+        print("Received {} bytes".format(bytes_read))
 
     def _sw_recv_file(self, client, address):
         count = 0
         _data = None
+        bytes_read = 0
+
         with open("tcp.pdf", "wb") as out:
             try:
                 while True:
                     data = client.recv(self.size)
+                    bytes_read += len(data)
                     if data != _data:
-                        print("Received chunk no {}".format(count))
+                        print("Received {} bytes".format(len(data)))
                         _data = data
                         count += 1
                     client.send(bytes([count]))
@@ -110,6 +131,8 @@ class TCPServer(object):
             except:
                 raise
                 print("SMTH happened")
+        print("Received {} chunks".format(count))
+        print("Received {} bytes".format(bytes_read))
 
 
 @click.command()
